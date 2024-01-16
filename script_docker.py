@@ -1,8 +1,8 @@
 import os
 import subprocess
 import requests
-from flask import Flask, jsonify
-from threading import Thread
+import time
+from flask import Flask
 
 app = Flask(__name__)
 
@@ -19,16 +19,19 @@ def construir_contenedor():
         subprocess.run(["docker", "build", "-t", "my_python_microservice", "."], check=True)
         print("Imagen Docker construida exitosamente.")
     except subprocess.CalledProcessError as e:
-        print(f"Error al construir la imagen Docker: {e}")
+         print(f"Error al ejecutar el contenedor Docker. Código de salida: {e.returncode}")
+         print(f"Salida estándar: {e.stdout}")
+         print(f"Error estándar: {e.stderr}")
 
 def ejecutar_contenedor():
     global CONTAINER_ID  # Necesitas declarar la variable global
 
     try:
         # Ejecuta el contenedor y obtén el identificador
-        result = subprocess.run(["docker", "run", "-p", "5000:5000", "-d", "my_python_microservice"], check=True, capture_output=True)
+        result = subprocess.run(["docker", "run", "-p", "5000:5000", "-d","my_python_microservice"], check=True, capture_output=True)
         CONTAINER_ID = result.stdout.decode().strip()
         print("Contenedor Docker ejecutándose en el puerto 5000. ID:", CONTAINER_ID)
+
     except subprocess.CalledProcessError as e:
         print(f"Error al ejecutar el contenedor Docker: {e}")
 
@@ -37,19 +40,15 @@ def detener_contenedor():
 
     if CONTAINER_ID:
         try:
-            # Imprime el contenido del contenedor antes de detenerlo
-            subprocess.run(["docker", "exec", CONTAINER_ID, "cat", "/archivos/file1"], check=True)
             # Detén el contenedor usando el identificador
             subprocess.run(["docker", "stop", CONTAINER_ID], check=True)
             print("Contenedor Docker detenido.")
         except subprocess.CalledProcessError as e:
             print(f"Error al detener el contenedor Docker: {e}")
 
-
 def realizar_peticiones_api():
     # Peticiones a la API después de levantar el contenedor
     try:
-        # Peticiones de ejemplo
         # Obtener un archivo
         filename = "file1"
         response = requests.get(f"{API_URL}/get_file/{filename}")
@@ -60,7 +59,7 @@ def realizar_peticiones_api():
         print("Listado de archivos:", response.json())
 
         # Eliminar un archivo
-        filename = "file3"
+        filename = "file5"
         response = requests.delete(f"{API_URL}/delete_file/{filename}")
         print("Respuesta de eliminar archivo:", response.json())
 
@@ -72,4 +71,7 @@ def realizar_peticiones_api():
 
 if __name__ == "__main__":
     construir_contenedor()
+    ejecutar_contenedor()
+    time.sleep(10)  # Esperar 10 segundos (ajusta según sea necesario)
     realizar_peticiones_api()
+
