@@ -11,9 +11,6 @@ API_URL = "http://127.0.0.1:5000"  # Cambia esto si tu aplicación se ejecuta en
 CONTAINER_ID = None  # Variable para almacenar el identificador del contenedor
 
 
-def ejecutar_servidor_flask():
-    app.run(host='0.0.0.0', port=5000)
-
 def construir_contenedor():
     try:
         subprocess.run(["docker", "build", "-t", "my_python_microservice", "."], check=True)
