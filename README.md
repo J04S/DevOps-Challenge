@@ -1,34 +1,33 @@
-Microservicio de Archivos con Flask y Docker
+Microservicio Flask con Docker
 
-Este repositorio contiene un simple microservicio de archivos implementado en Python con Flask y Docker. El microservicio permite realizar operaciones básicas en archivos, como obtener el contenido de un archivo, listar archivos disponibles y eliminar archivos.
+Este repositorio contiene un microservicio simple en Flask para gestionar operaciones de archivos dentro de un contenedor Docker. El microservicio proporciona puntos finales para recuperar, listar y eliminar archivos. Además, se incluyen scripts de automatización para construir, ejecutar y probar el microservicio utilizando Docker.
 
-Contenido del Repositorio
-app.py: Este archivo contiene la implementación del servidor Flask que maneja las operaciones relacionadas con archivos. Proporciona tres endpoints principales:
+Estructura de Archivos
+app.py: El script principal en Python que implementa el microservicio Flask.
+Dockerfile: Archivo de configuración para construir la imagen de Docker.
+script_docker.py: Script de automatización para construir, ejecutar y probar el microservicio con Docker.
 
-/get_file/<filename>: Obtiene el contenido de un archivo específico.
-/list_files: Lista todos los archivos disponibles.
-/delete_file/<filename>: Elimina un archivo específico.
-script_docker.py: Este script se encarga de construir, ejecutar y detener el contenedor Docker que aloja el microservicio. También realiza algunas solicitudes de prueba a la API después de que el contenedor esté en funcionamiento.
+Uso:
+Construir la Imagen de Docker --> Este script automatiza el proceso de construcción de la imagen de Docker. Utiliza el Dockerfile para crear una imagen llamada my_python_microservice.
 
-Dockerfile: El archivo de configuración de Docker que define la imagen del contenedor. Utiliza la imagen base de Python 3.8, instala las dependencias especificadas en requirements.txt y configura el comando para ejecutar la aplicación Flask.
+Ejecutar el Contenedor Docker --> El script ejecuta el contenedor Docker, mapeando el puerto 5000 en el host al puerto 5000 en el contenedor. El microservicio Flask estará accesible en http://127.0.0.1:5000.
 
-requirements.txt: Archivo que enumera las dependencias de Python necesarias para ejecutar la aplicación, en este caso, Flask.
+Probar el Microservicio
+Después de ejecutar el contenedor, el script envía solicitudes HTTP de ejemplo al microservicio para probar su funcionalidad.
+El script de prueba realiza las siguientes acciones:
+  -Obtiene el contenido de un archivo (file1 en este ejemplo).
+  -Lista todos los archivos disponibles.
+  -Elimina un archivo (file5 en este ejemplo).
 
-Instrucciones de Uso
-Requisitos Previos
-Asegúrate de tener Docker instalado en tu sistema.
+Detener el Contenedor Docker --> El script detiene automáticamente el contenedor Docker después de la prueba.
 
-Pasos para Ejecutar
-Ejecuta el siguiente comando en la terminal desde el directorio raíz del repositorio para ejecutar el script
-Python3 script_docker.py
+Estructura de Directorios
 
-Notas Adicionales
-La aplicación Flask se ejecuta en el puerto 5000, asegúrate de que este puerto esté disponible en tu sistema.
-El contenido de los archivos se almacena en el directorio archivos. Asegúrate de que este directorio esté presente y accesible para el contenedor.
-Ajusta los tiempos de espera en el script según sea necesario para garantizar que las operaciones se realicen después de que el contenedor esté completamente en funcionamiento.
-¡Disfruta explorando y utilizando este simple microservicio de archivos!
+-archivos/: Directorio donde se almacenan los archivos dentro del contenedor.
+-app.py: Implementación del microservicio Flask.
+-Dockerfile: Archivo de configuración para construir la imagen de Docker.
+-script_docker.py: Script de automatización para construir, ejecutar y probar el microservicio.
 
-
-
-
-
+Notas
+-Asegúrate de que Docker esté instalado en tu sistema antes de ejecutar el script de automatización.
+-Ajusta el tiempo de espera en time.sleep(10) en script_docker.py si es necesario para permitir que el contenedor se inicialice completamente antes de la prueba.
